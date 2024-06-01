@@ -1,4 +1,4 @@
-from lib.llm import generate_image_prompt, get_img_index, change_image_propmt
+from lib.llm import generate_image_prompt, change_image_propmt
 from lib.stable_diffusion import generate_image
 
 
@@ -6,13 +6,38 @@ class Image(object):
     path: str
     sd_prompt: str | None = None
 
-    def __init__(self, path=None, query=None, theme=None):
-        if not (path is not None):
-            self.path = None
-            return
+    def process(self, info, theme):
+        if info is None:
+            return self
 
-        self.sd_prompt = generate_image_prompt(query=query, theme=theme)
-        self.path = generate_image(self.sd_prompt)
+        action = info["action"]
+
+        if action == "set" or self.path is None:
+            sd_prompt = generate_image_prompt(
+                query=info["query"],
+                theme=theme.desc,
+                background_color=theme.background_color,
+            )
+            path = generate_image(sd_prompt)
+
+        elif action == "change":  # !
+            assert self.sd_prompt is not None
+
+            sd_prompt = change_image_propmt(
+                query=info["query"],
+                theme=theme,
+                previous_background_prompt=self.sd_prompt,
+                background_color=theme.background_color,
+            )
+
+            path = generate_image(sd_prompt)
+
+        else:
+            path = self.path
+            sd_prompt = self.sd_prompt
+
+        self.path = path
+        self.sd_prompt = sd_prompt
 
     def regenerate(self):
         self.path = generate_image(self.sd_prompt)

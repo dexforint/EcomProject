@@ -1,14 +1,10 @@
 from lib.llm import (
     create_background_prompt,
-    correct_background_prompt,
+    change_background_prompt,
 )
 from lib.stable_diffusion import (
     stable_diffusion_create_background,
-    stable_diffusion_correct_background,
-    stable_diffusion_create_image,
-    stable_diffusion_edit_image,
 )
-from lib.llm import llm
 
 
 class Background(object):
@@ -29,17 +25,17 @@ class Background(object):
             )
             path = stable_diffusion_create_background(sd_prompt)
 
-        elif action == "correct":  # !
+        elif action == "change":  # !
             assert self.sd_prompt is not None
 
-            sd_prompt = correct_background_prompt(
+            sd_prompt = change_background_prompt(
                 query=info["query"],
                 theme=theme,
                 previous_background_prompt=self.sd_prompt,
                 background_color=theme.background_color,
             )
 
-            path = stable_diffusion_correct_background(sd_prompt)
+            path = stable_diffusion_create_background(sd_prompt)
 
         else:
             path = self.path

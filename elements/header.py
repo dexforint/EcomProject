@@ -25,7 +25,6 @@ class Header(object):
             )
 
         elif action == "change":
-            self.is_present = info.get("is_present", self.is_present)
             self.text_color = info.get("text_color", self.text_color)
             self.text = info.get("text", self.text)
             self.text_font = info.get("text_font", self.text_font)
