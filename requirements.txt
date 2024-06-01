@@ -1,0 +1,9 @@
+python-pptx
+qrcode
+openai
+diffusers
+transformers
+accelerate
+xformers
+aiogram
+python-dotenv
