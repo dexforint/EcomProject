@@ -50,8 +50,9 @@ def stable_diffusion_create_background(sd_prompt):
         num_inference_steps=6,
         guidance_scale=3,
         width=1200,
-        height=593,
+        height=592,
     ).images[0]
+    img = img.resize((1200, 593))
 
     name = get_random_string(4)
     path = f"./images/{name}.png"

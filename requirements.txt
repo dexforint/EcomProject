@@ -3,6 +3,7 @@ qrcode
 openai
 faster-whisper
 rembg
+convertapi
 diffusers
 transformers
 accelerate

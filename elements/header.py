@@ -1,10 +1,12 @@
-from lib.llm import llm
+from lib.llm import generate_header, change_header
 
 
 class Header(object):
     is_present: bool = False
+
     text_color: str | None = "#ffffff"
     text: str | None = None
+
     text_font: str | None = "Arial"
 
     def process(self, info, theme):
@@ -16,15 +18,23 @@ class Header(object):
 
         if action == "set":
             self.is_present = True
-            self.text_color = info.get(
-                "text_color", theme.header_text_color or self.text_color
+
+            header_obj = generate_header(info["query"], theme=theme.description)
+
+            self.text_color = (
+                header_obj.get("text_color", None) or theme.header_text_color
             )
-            self.text = info["text"]
-            self.text_font = info.get(
-                "text_font", theme.header_text_font or self.text_font
-            )
+            self.text = header_obj.get("text", None) or "Заголовок"
 
         elif action == "change":
-            self.text_color = info.get("text_color", self.text_color)
-            self.text = info.get("text", self.text)
-            self.text_font = info.get("text_font", self.text_font)
+            header_obj = change_header(
+                info["query"],
+                theme=theme.description,
+                prev_text_color=self.text_color,
+                prev_text=self.text,
+            )
+
+            self.text_color = (
+                header_obj.get("text_color", None) or theme.header_text_color
+            )
+            self.text = header_obj.get("text", None) or "Заголовок"

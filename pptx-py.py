@@ -16,8 +16,8 @@ from pptx.util import Inches, Pt
 
 # Creating presentation object
 root = Presentation()
-root.slide_width = Inches(16.0)
-root.slide_height = Inches(9)
+root.slide_width = Inches(16.675)
+root.slide_height = Inches(8.225)
 # Creating slide layout
 first_slide_layout = root.slide_layouts[0]
 
@@ -38,7 +38,7 @@ slide.placeholders[1].text = " This is 2nd way"
 left = top = Inches(0)
 
 # adding images
-pic = slide.shapes.add_picture("./images/logo.png", left, top)
+pic = slide.shapes.add_picture("./back.png", left, top)
 
 # font
 # creating textBox

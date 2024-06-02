@@ -9,6 +9,7 @@ from elements.text import Text
 from elements.theme import Theme
 
 from lib.llm import structure_query
+from lib.pptx_tools import convert_pptx_to_image, render_pptx
 
 
 class DesignController(object):
@@ -21,6 +22,9 @@ class DesignController(object):
     texts: Text = Text()
     button: Button = Button()
     qr_code: QRCode = QRCode()
+
+    pptx_path = None
+    img_path = None
 
     def create(self, query, path=None):
         info = {"query": query, "path": path}
@@ -54,14 +58,17 @@ class DesignController(object):
             variation = deepcopy(self)
 
             variation.background.regenerate()
-            variation.images.regenerate()
+            variation.image.regenerate()
 
             variations.append(variation)
 
         return variations
 
-    def render_image(self, template_index=None):
-        pass
+    def render_image(self):
+        self.pptx_path = self.render_pptx()
+        self.img_path = convert_pptx_to_image(self.pptx_path)
+        return self.img_path
 
-    def render_pptx(self, template_index=None):
-        pass
+    def render_pptx(self):
+        self.pptx_path = render_pptx(self)
+        return self.pptx_path

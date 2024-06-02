@@ -5,8 +5,10 @@ from dataclasses import dataclass
 @dataclass
 class Text(object):
     is_present: bool = False
+
     text: str
     text_color: str | None = "#ffffff"
+
     text_font: str | None = "Arial"
 
     def process(self, info, theme, header):
