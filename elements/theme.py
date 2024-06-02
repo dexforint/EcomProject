@@ -12,7 +12,7 @@ class Theme(object):
     header_text_font: str | None = None
 
     def process(self, query: str):
-        theme = get_theme_object(self, query=query)
+        theme = get_theme_object(query=query)
 
         self.description = theme["description"]
         self.background_color = theme["background_color"]

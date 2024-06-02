@@ -19,7 +19,7 @@ class DesignController(object):
     background: Background = Background()
     image: Image = Image()
     header: Header = Header()
-    texts: Text = Text()
+    text: Text = Text()
     button: Button = Button()
     qr_code: QRCode = QRCode()
 
@@ -27,7 +27,7 @@ class DesignController(object):
     img_path = None
 
     def create(self, query, path=None):
-        info = {"query": query, "path": path}
+        info = {"query": query, "path": path, "action": "set"}
 
         self.theme.process(query=query)
         self.background.process(info=info, theme=self.theme)
@@ -44,11 +44,18 @@ class DesignController(object):
 
         # self.theme.process(query=query)
 
-        self.background.process(info=info, theme=self.theme)
-        self.image.process(info=info, theme=self.theme)
-        self.header.process(info=info, theme=self.theme)
-        self.text.process(info=info, theme=self.theme)
-        self.button.process(info=info, theme=self.theme)
+        element = info["element"]
+
+        if element == "background":
+            self.background.process(info=info, theme=self.theme)
+        elif element == "image":
+            self.image.process(info=info, theme=self.theme)
+        elif element == "header":
+            self.header.process(info=info, theme=self.theme)
+        elif element == "text":
+            self.text.process(info=info, theme=self.theme, header=self.header.text)
+        elif element == "button":
+            self.button.process(info=info, theme=self.theme)
         # self.qr_code.process(info=info, theme=self.theme)
 
     def get_variations(self, n_variations=3):

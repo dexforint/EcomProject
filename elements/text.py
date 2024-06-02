@@ -1,13 +1,11 @@
 from lib.llm import generate_text, change_text
-from dataclasses import dataclass
 
 
-@dataclass
 class Text(object):
     is_present: bool = False
 
     text: str
-    text_color: str | None = "#ffffff"
+    text_color: str | None = [255, 255, 255]
 
     text_font: str | None = "Arial"
 
@@ -17,10 +15,10 @@ class Text(object):
 
         action = info["action"]
 
-        if action == "add":
+        if action == "set":
             self.is_present = True
             text_info = generate_text(
-                query=info["query"], theme=theme.desc, header=header
+                query=info["query"], theme=theme.description, header=header
             )
 
             self.text = text_info["text"]
@@ -30,7 +28,7 @@ class Text(object):
             self.is_present = True
             text_info = change_text(
                 query=info["query"],
-                theme=theme.desc,
+                theme=theme.description,
                 prev_text=self.text,
                 prev_text_color=self.text_color,
                 header=header,

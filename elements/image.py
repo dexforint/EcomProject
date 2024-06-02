@@ -15,7 +15,7 @@ class Image(object):
         if action == "set" or self.path is None:
             sd_prompt = generate_image_prompt(
                 query=info["query"],
-                theme=theme.desc,
+                theme=theme.description,
                 background_color=theme.background_color,
             )
             path = generate_image(sd_prompt)

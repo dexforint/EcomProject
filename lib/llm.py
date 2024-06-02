@@ -3,6 +3,7 @@ import openai
 import json
 from lib.utils import parse_json
 from dotenv import dotenv_values
+from time import sleep
 
 config = dotenv_values(".env")
 
@@ -25,8 +26,11 @@ current_cliend_index = 0
 def get_answer(messages, temperature=0.7):
     global current_cliend_index, N_CLIENTS, MODEL_NAME
 
+    sleep(1)
+
     client = CLIENTS[current_cliend_index]
     current_cliend_index = (current_cliend_index + 1) % N_CLIENTS
+    print(f"Current client index: {current_cliend_index}")
 
     chat_completion = client.chat.completions.create(
         model=MODEL_NAME,
@@ -36,6 +40,8 @@ def get_answer(messages, temperature=0.7):
     )
 
     answer = chat_completion.choices[0].message.content
+    answer = answer.replace("\\_", "_")
+    print(f"Answer: {answer}")
     answer = parse_json(answer)
     return answer
 
@@ -103,8 +109,8 @@ def change_background_prompt(
     return llm_answer
 
 
-def generate_image_prompt(query, theme):
-    system_prompt = f"""Ты являешься цифровым дизайнером, который использует Stable Diffusion для генерации изображений для рекламных баннеров и презентаций. Твоя задача - по запросу пользователя и выбранной теме рекламного баннера придумать два текста: prompt - текст на английском языке, описывающий генерируемое изображение для Stable Diffusion и negative_prompt - текст на английском языке, описывающий нежелательные черты и элементы генерируемого изображения. 
+def generate_image_prompt(query, theme, background_color):
+    system_prompt = f"""Ты являешься цифровым дизайнером, который использует Stable Diffusion для генерации изображений для рекламных баннеров и презентаций. Твоя задача - по запросу пользователя, цвету фона и выбранной теме рекламного баннера придумать два текста: prompt - текст на английском языке, описывающий генерируемое изображение для Stable Diffusion и negative_prompt - текст на английском языке, описывающий нежелательные черты и элементы генерируемого изображения. 
 
 Так же учти, что после генерации изображения, задний фон изображения будет вырезан с помощью отдельной нейронной сети, поэтому передний фон и задний фон должны отчётливо выделяться.
 
@@ -120,6 +126,9 @@ def generate_image_prompt(query, theme):
 
 Заданная тема:
 \"\"\"{theme}\"\"\"
+
+Цвет заднего фона:
+\"\"\"{background_color}\"\"\"
 """
 
     messages = [
@@ -305,7 +314,7 @@ def generate_button(query, theme):
 - text_color: цвет текста на кнопке в формате RGB (Пример: [255, 120, 0]).
 - text: текст кнопки (Например: "Подробнее").
 
-Помни: цвета должны сочетаться друг с другом стилистически. Пользователь может ввести не полное описание темы, а лишь заголовок баннера, в таком случае тебе нужно проявить креативность и всё равно создать дизайн.
+Помни: цвета должны сочетаться друг с другом стилистически. Не надо делать белый текст на белом фоне и тому подобное. Пользователь может ввести не полное описание темы, а лишь заголовок баннера, в таком случае тебе нужно проявить креативность и всё равно создать дизайн.
 
 Если запрос пользователя и тема противоречат друг другу, то ты должен отдавать предпочтение запросу пользователя.
 
@@ -437,7 +446,7 @@ def generate_text(query, theme, header):
 
 Следуй инструкциям из запроса пользователя. Не изменяй те поля, которые пользователь не упоминает в запросе. Следуй инструкциям из запроса пользователя.
 
-Ответ должен быть исключительно в формате JSON с полями: background_color, text_color, text. Помни, твой ответ должен быть без ошибок обработан с помощью json.loads (Python язык программирования).
+Ответ должен быть исключительно в формате JSON с полями: text_color, text. Помни, твой ответ должен быть без ошибок обработан с помощью json.loads (Python язык программирования).
 """
     user_prompt = f"""Запрос пользователя:
 \"\"\"{query}\"\"\"
