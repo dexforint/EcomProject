@@ -18,6 +18,20 @@ random_string = get_random_string(10)
 print(random_string)  # Выведет случайную строку длины 10
 
 
+def get_rgb(rgb_color):
+    color = []
+    for val1 in rgb_color:
+        if isinstance(val1, tuple):
+            val1 = val1[0]
+
+        if isinstance(val1, str):
+            val1 = int(val1)
+
+        color.append(val1)
+
+    return color
+
+
 # !@title JSON Parser
 def parse_json(text: str, partial: bool = False) -> Any:
     text = text.strip()

@@ -1,4 +1,5 @@
 from lib.llm import generate_header, change_header
+from lib.utils import get_rgb
 
 
 class Header(object):
@@ -19,17 +20,18 @@ class Header(object):
         if action == "set":
             self.is_present = True
 
-            header_obj = generate_header(info["query"], theme=theme.description)
+            header_obj = generate_header(info["query"], theme=theme.get_string())
 
             self.text_color = (
                 header_obj.get("text_color", None) or theme.header_text_color
             )
+            self.text_color = get_rgb(self.text_color)
             self.text = header_obj.get("text", None) or "Заголовок"
 
         elif action == "change":
             header_obj = change_header(
                 info["query"],
-                theme=theme.description,
+                theme=theme.get_string(),
                 prev_text_color=self.text_color,
                 prev_text=self.text,
             )
@@ -37,4 +39,5 @@ class Header(object):
             self.text_color = (
                 header_obj.get("text_color", None) or theme.header_text_color
             )
+            self.text_color = get_rgb(self.text_color)
             self.text = header_obj.get("text", None) or "Заголовок"

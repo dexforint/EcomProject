@@ -20,7 +20,7 @@ class Background(object):
         if action == "set" or self.path is None:
             sd_prompt = create_background_prompt(
                 query=info["query"],
-                theme=theme.description,
+                theme=theme.get_string(),
                 background_color=theme.background_color,
             )
             path = stable_diffusion_create_background(sd_prompt)
@@ -30,7 +30,7 @@ class Background(object):
 
             sd_prompt = change_background_prompt(
                 query=info["query"],
-                theme=theme.description,
+                theme=theme.get_string(),
                 previous_background_prompt=self.sd_prompt,
                 background_color=theme.background_color,
             )

@@ -1,4 +1,5 @@
 from lib.llm import generate_button, change_button
+from lib.utils import get_rgb
 
 
 class Button(object):
@@ -21,22 +22,24 @@ class Button(object):
         if action == "set" or self.is_first:
             self.is_present = True
 
-            button_obj = generate_button(info["query"], theme=theme.description)
+            button_obj = generate_button(info["query"], theme=theme.get_string())
 
             self.background_color = (
                 button_obj.get("background_color", None)
                 or theme.button_background_color
             )
+            self.background_color = get_rgb(self.background_color)
             self.text_color = (
                 button_obj.get("text_color", None) or theme.button_text_color
             )
+            self.text_color = get_rgb(self.text_color)
             self.text = button_obj.get("text", None) or "Подробнее"
             self.border_radius = button_obj.get("border_radius", None) or 10
 
         elif action == "change":
             button_obj = change_button(
                 info["query"],
-                theme=theme.description,
+                theme=theme.get_string(),
                 prev_background_color=self.background_color,
                 prev_text_color=self.text_color,
                 prev_text=self.text,
@@ -46,9 +49,11 @@ class Button(object):
                 button_obj.get("background_color", None)
                 or theme.button_background_color
             )
+            self.background_color = get_rgb(self.background_color)
             self.text_color = (
                 button_obj.get("text_color", None) or theme.button_text_color
             )
+            self.text_color = get_rgb(self.text_color)
             self.text = button_obj.get("text", None) or "Подробнее"
             self.border_radius = button_obj.get("border_radius", None) or 10
 

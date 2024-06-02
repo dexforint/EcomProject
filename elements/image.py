@@ -15,7 +15,7 @@ class Image(object):
         if action == "set" or self.path is None:
             sd_prompt = generate_image_prompt(
                 query=info["query"],
-                theme=theme.description,
+                theme=theme.get_string(),
                 background_color=theme.background_color,
             )
             path = generate_image(sd_prompt)
@@ -25,7 +25,7 @@ class Image(object):
 
             sd_prompt = change_image_propmt(
                 query=info["query"],
-                theme=theme,
+                theme=theme.get_string(),
                 previous_background_prompt=self.sd_prompt,
                 background_color=theme.background_color,
             )
